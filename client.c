@@ -1,4 +1,3 @@
-
 #include <stdio.h>              /* printf(),fprintf()に必要 */
 #include <stdlib.h>             /* perror(),atoi()に必要 */
 #include <sys/socket.h>         /* socket(),connect()に必要 */
@@ -49,10 +48,11 @@ int main(int argc, char **argv){
     target.sin_addr.s_addr = inet_addr(server_idaddr);              /* サーバーのIPアドレス */
     target.sin_port = htons(server_port);                           /* サーバーのポート番号 */
 
-    if(connect(sock,(struct sockaddr *)&target,sizeof(target)<0))   /* サーバーへの接続を確立する */
+    if(connect(sock,(struct sockaddr *)&target,sizeof(target))<0)   /* サーバーへの接続を確立する */
         DieWithError("connect()failed");                            /* 接続時エラーの判定 */
     
     commun(sock);                                                   /* 関数内の処理でサーバーと各種通信を行う */
     close(sock);                                                    /* サーバーとの接続をクローズする */
     return 0;
 }
+
