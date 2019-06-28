@@ -15,7 +15,22 @@ void commun(int sock){
     char buf[BUF_SIZE];
     int len_r;
 
-    if((len_r=recv(sock,buf,BUF_SIZE,0))<=0)
+		while((len_r = recv(sock,buf,BUF_SIZE,0)>0){
+			buf[len_r]='\0';
+			
+			printf("%s\n",buf);
+			
+			if(strstr(buf,"\r\n\r\n")){
+				break;
+			}
+		}
+			if(len_r <= 0){
+				DieWithError("received() failed.");
+			}
+			
+			printf("recieved HTTP request.\n");
+
+			if((len_r=recv(sock,buf,BUF_SIZE,0))<=0)
         DieWithError("recv()failed");
     
     buf[len_r] = '\0';
