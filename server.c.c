@@ -13,16 +13,21 @@ void DieWithError(char *errorMessage){
 
 void commun(int sock){
     char buf[BUF_SIZE];
+	char buf_old[BUF_SIZE];
+	char buf2[2*BUF_SIZE];
     int len_r;
-
-		while((len_r = recv(sock,buf,BUF_SIZE,0)>0){
+	char response[BUF_SIZE];
+	
+	buf_old[0]='\0';
+		while((len_r = recv(sock,buf,BUF_SIZE,0)) >0){
 			buf[len_r]='\0';
 			
-			printf("%s\n",buf);
-			
-			if(strstr(buf,"\r\n\r\n")){
+			sprintf(buf2,"%s%s",buf_old,buf);
+		
+			if(strstr(buf2,"\r\n\r\n")){
 				break;
 			}
+			sprintf(buf_old,"%s",buf);
 		}
 			if(len_r <= 0){
 				DieWithError("received() failed.");
