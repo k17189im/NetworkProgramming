@@ -1,11 +1,11 @@
-#include<sys/socket.h>	/*socketŠÖ”‚ª’è‹`‚³‚ê‚Ä‚é*/
+#include<sys/socket.h>	/*socketé–¢æ•°ãŒå®šç¾©ã•ã‚Œã¦ã‚‹*/
 #include<unistd.h>	
 #define BUF_SIZE 256
 #include<string.h>
-#include <stdio.h>              /* printf(),fprintf()‚É•K—v */
-#include <stdlib.h>             /* perror(),atoi()‚É•K—v */
-#include <sys/socket.h>         /* socket(),connect()‚É•K—v */
-#include <arpa/inet.h>          /* sockaddr_in,inet_addr()‚É•K—v */
+#include <stdio.h>              /* printf(),fprintf()ã«å¿…è¦ */
+#include <stdlib.h>             /* perror(),atoi()ã«å¿…è¦ */
+#include <sys/socket.h>         /* socket(),connect()ã«å¿…è¦ */
+#include <arpa/inet.h>          /* sockaddr_in,inet_addr()ã«å¿…è¦ */
 
 
 

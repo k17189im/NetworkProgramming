@@ -1,46 +1,50 @@
-#include <stdio.h>              /* printf(),fprintf()‚É•K—v */
-#include <stdlib.h>             /* perror(),atoi()‚É•K—v */
-#include <sys/socket.h>         /* socket(),bind(),accept()‚É•K—v */
-#include <arpa/inet.h>          /* sockaddr_in,inet_addr()‚É•K—v */
-#include <string.h>             /* strlen()‚É•K—v */
-#include <unistd.h>             /* close()‚É•K—v */
-#define BUF_SIZE 256            /* ƒ}ƒWƒbƒNƒiƒ“ƒo[‚Å256‚Ì’è‹` */
+#include <stdio.h>      /* printf(),fprintf()ã«å¿…è¦ */
+#include <stdlib.h>     /* perror(),atoi()ã«å¿…è¦ */
+#include <sys/socket.h> /* socket(),bind(),accept()ã«å¿…è¦ */
+#include <arpa/inet.h>  /* sockaddr_in,inet_addr()ã«å¿…è¦ */
+#include <string.h>     /* strlen()ã«å¿…è¦ */
+#include <unistd.h>     /* close()ã«å¿…è¦ */
+#define BUF_SIZE 256    /* ãƒã‚¸ãƒƒã‚¯ãƒŠãƒ³ãƒãƒ¼ã§256ã®å®šç¾© */
 
-void DieWithError(char *errorMessage){
-    perror(errorMessage);                                                               /* •W€ƒGƒ‰[o—Í‚ÉƒGƒ‰[ƒƒbƒZ[ƒW‚ğ•Ô‚· */
-    exit(1);                                                                            /* ˆø”‚ÍuI—¹ƒXƒe[ƒ^ƒXv¨ ƒGƒ‰[‚Ì‚Í‚PˆÈã‚ğ•Ô‚· */
+void DieWithError(char *errorMessage)
+{
+    perror(errorMessage); /* æ¨™æº–ã‚¨ãƒ©ãƒ¼å‡ºåŠ›ã«ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’è¿”ã™ */
+    exit(1);              /* å¼•æ•°ã¯ã€Œçµ‚äº†ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹ã€â†’ ã‚¨ãƒ©ãƒ¼ã®æ™‚ã¯ï¼‘ä»¥ä¸Šã‚’è¿”ã™ */
 }
 
-void commun(int sock){
-    char buf[BUF_SIZE];                                                                 /* ƒGƒR[•¶š—ñ—p‚Ìƒoƒbƒtƒ@ */
-    int len_r;                                                                          /* óM•¶š” */
+void commun(int sock)
+{
+    char buf[BUF_SIZE]; /* ã‚¨ã‚³ãƒ¼æ–‡å­—åˆ—ç”¨ã®ãƒãƒƒãƒ•ã‚¡ */
+    int len_r;          /* å—ä¿¡æ–‡å­—æ•° */
 
-    if((len_r=recv(sock,buf,BUF_SIZE,0))<=0)                                            /* óMƒf[ƒ^‚ğƒoƒbƒtƒ@‚ÉŠi”[ */
-        DieWithError("recv()failed");                                                   /* óMƒGƒ‰[(•¶š—Êˆá”½) */
-    
-    buf[len_r] = '\0';                                                                  /* •¶––EOS‚Ì’Ç‰Á */
-    printf("%s\n",buf);                                                                 /* óMƒf[ƒ^‚ğo—Í */
-    if((send(sock,buf,strlen(buf),0))!=strlen(buf))                                     /* ƒNƒ‰ƒCƒAƒ“ƒg‚Éó‚¯æ‚Á‚½ƒf[ƒ^‚ğ•Ô‹p */
-        DieWithError("send()sent a message of unexpected bytes");                       /* ‘—MƒGƒ‰[(ƒf[ƒ^‚Ì•sˆê’v) */
+    if ((len_r = recv(sock, buf, BUF_SIZE, 0)) <= 0) /* å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’ãƒãƒƒãƒ•ã‚¡ã«æ ¼ç´ */
+        DieWithError("recv()failed");                /* å—ä¿¡æ™‚ã‚¨ãƒ©ãƒ¼(æ–‡å­—é‡é•å) */
+
+    buf[len_r] = '\0';                                            /* æ–‡æœ«EOSã®è¿½åŠ  */
+    printf("%s\n", buf);                                          /* å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã‚’å‡ºåŠ› */
+    if ((send(sock, buf, strlen(buf), 0)) != strlen(buf))         /* ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã«å—ã‘å–ã£ãŸãƒ‡ãƒ¼ã‚¿ã‚’è¿”å´ */
+        DieWithError("send()sent a message of unexpected bytes"); /* é€ä¿¡æ™‚ã‚¨ãƒ©ãƒ¼(ãƒ‡ãƒ¼ã‚¿ã®ä¸ä¸€è‡´) */
 }
-int main(int argc, char **argv) {
-    int servSock = socket(PF_INET,SOCK_STREAM,0);                                       /* ‘Ò‚¿ó‚¯—pƒ\ƒPƒbƒg‚Ìì¬(PF_INET=IPv4,SOCKET_STREAM=TCP,0=c‚è‚Í‚¨”C‚¹) */
+int main(int argc, char **argv)
+{
+    int servSock = socket(PF_INET, SOCK_STREAM, 0); /* å¾…ã¡å—ã‘ç”¨ã‚½ã‚±ãƒƒãƒˆã®ä½œæˆ(PF_INET=IPv4,SOCKET_STREAM=TCP,0=æ®‹ã‚Šã¯ãŠä»»ã›) */
 
-    int cliSock;                                                                        /* ’ÊM—p‚Ìƒ\ƒPƒbƒg */
-    struct sockaddr_in clientAddress;                                                   /* ƒNƒ‰ƒCƒAƒ“ƒg‚ÌuIPƒAƒhƒŒƒX&ƒ|[ƒg”Ô†v‚Ì‚Ó‚½‚Â‚ğŠi”[ */
-    unsigned int szClientAddr;                                                          /* ƒNƒ‰ƒCƒAƒ“ƒg‚ÌuIPƒAƒhƒŒƒX+ƒ|[ƒg”Ô†v‚ÌƒTƒCƒY */
+    int cliSock;                      /* é€šä¿¡ç”¨ã®ã‚½ã‚±ãƒƒãƒˆ */
+    struct sockaddr_in clientAddress; /* ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã®ã€ŒIPã‚¢ãƒ‰ãƒ¬ã‚¹&ãƒãƒ¼ãƒˆç•ªå·ã€ã®ãµãŸã¤ã‚’æ ¼ç´ */
+    unsigned int szClientAddr;        /* ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã®ã€ŒIPã‚¢ãƒ‰ãƒ¬ã‚¹+ãƒãƒ¼ãƒˆç•ªå·ã€ã®ã‚µã‚¤ã‚º */
 
-    struct sockaddr_in servAddress;                                                     /* ƒT[ƒo[‚Ìî•ñ‚ğŠi”[‚·‚é\‘¢‘Ì */
-    servAddress.sin_family = AF_INET;                                                   /* ƒCƒ“ƒ^[ƒlƒbƒgƒAƒhƒŒƒXƒtƒ@ƒ~ƒŠ */
-    servAddress.sin_addr.s_addr = htonl(INADDR_ANY);                                    /* ƒT[ƒo[‚ÌIPƒAƒhƒŒƒX(ANY‚Í”CˆÓ‚ÌêŠ‚ª‰Â”\‚Å‚ ‚é‚±‚Æ‚ğ¦‚·) */
-    servAddress.sin_port = htons(10001);                                                /* ó‚¯æ‚éƒ|[ƒg”Ô† */
-    bind(servSock,(struct sockaddr *)&servAddress,sizeof(servAddress));                 /* ƒT[ƒo[‚Ìİ’è‚ğservSock‚ÉŒ‹‚Ñ‚Â‚¯‚é */
-    listen(servSock,5);                                                                 /* ‡”Ô‘Ò‚¿(‘æ“ñˆø”‚ª‡”Ô‘Ò‚¿‚µ‚Ä‚à—Ç‚¢ƒNƒ‰ƒCƒAƒ“ƒg”) */
-    while(1){
-        szClientAddr = sizeof(clientAddress);                                           /* óMƒf[ƒ^‚ÌŒ`®‚Ìƒƒ‚ƒŠƒTƒCƒY‚ğæ“¾ */
-        cliSock = accept(servSock,(struct sockaddr*)&clientAddress,&szClientAddr);      /*  */
-        commun(cliSock);                                                                /* ƒ†[ƒU[’è‹` */
+    struct sockaddr_in servAddress;                                       /* ã‚µãƒ¼ãƒãƒ¼ã®æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹æ§‹é€ ä½“ */
+    servAddress.sin_family = AF_INET;                                     /* ã‚¤ãƒ³ã‚¿ãƒ¼ãƒãƒƒãƒˆã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ•ã‚¡ãƒŸãƒª */
+    servAddress.sin_addr.s_addr = htonl(INADDR_ANY);                      /* ã‚µãƒ¼ãƒãƒ¼ã®IPã‚¢ãƒ‰ãƒ¬ã‚¹(ANYã¯ä»»æ„ã®å ´æ‰€ãŒå¯èƒ½ã§ã‚ã‚‹ã“ã¨ã‚’ç¤ºã™) */
+    servAddress.sin_port = htons(10001);                                  /* å—ã‘å–ã‚‹ãƒãƒ¼ãƒˆç•ªå· */
+    bind(servSock, (struct sockaddr *)&servAddress, sizeof(servAddress)); /* ã‚µãƒ¼ãƒãƒ¼ã®è¨­å®šã‚’servSockã«çµã³ã¤ã‘ã‚‹ */
+    listen(servSock, 5);                                                  /* é †ç•ªå¾…ã¡(ç¬¬äºŒå¼•æ•°ãŒé †ç•ªå¾…ã¡ã—ã¦ã‚‚è‰¯ã„ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆæ•°) */
+    while (1)
+    {
+        szClientAddr = sizeof(clientAddress);                                         /* å—ä¿¡ãƒ‡ãƒ¼ã‚¿ã®å½¢å¼ã®ãƒ¡ãƒ¢ãƒªã‚µã‚¤ã‚ºã‚’å–å¾— */
+        cliSock = accept(servSock, (struct sockaddr *)&clientAddress, &szClientAddr); /*  */
+        commun(cliSock);                                                              /* ãƒ¦ãƒ¼ã‚¶ãƒ¼å®šç¾© */
     }
-    close(servSock);                                                                    /* server‚ğƒNƒ[ƒY‚·‚é */
+    close(servSock); /* serverã‚’ã‚¯ãƒ­ãƒ¼ã‚ºã™ã‚‹ */
     return 0;
 }
